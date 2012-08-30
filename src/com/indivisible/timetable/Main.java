@@ -1,44 +1,77 @@
 package com.indivisible.timetable;
 
 import java.io.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 //import java.util.Calendar;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-public class Main extends Activity{
+public class Main extends Activity implements View.OnClickListener{
 
 	Timetable ttable;
-	ToastNext toast;
-	File file;
+	//ToastNext toast;
+	int recourceID = R.raw.timetable;	// hard coded for the moment
 	
-	ArrayList<String> nextLines;
-	int day, hour, minute;
+	//ArrayList<String> nextLines;
+	//int day, hour, minute;
+	
+	Button bClose = null;
+	TextView tvCurrent = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// run when our app first loads (may have been auto killed prev)
 		super.onCreate(savedInstanceState);
-		ttable = new Timetable();
-		testFileExists();
+		setContentView(R.layout.main_disp);
+		//testFileExists();
+		init();
+		updateListing();
 	}
 
 	@Override
-	protected void onResume() {
-		// run whenever we return to our app 
-		super.onResume();
-		nextLines =	ttable.getNext();
-		toast = new ToastNext(this, nextLines);
-		toast.DispNotice();
-		//finish();
+	protected void onPause() {
+		// run whenever we leave our app 
+		super.onPause();
+		finish();
+	}
+	
+	public void onClick(View v) {
+		// Only one button; when clicked close.
+		finish();
+//		switch (v.getId()){
+//		case R.id.b_close:
+//			finish();
+//		}
+	}
+	
+	@SuppressWarnings("unused")
+	public void init(){
+		Button bClose = (Button) this.findViewById(R.id.b_close);
+		TextView tvCurrent = (TextView) this.findViewById(R.id.tv_current);
+		Log.d("done", "init()");
+	}
+	
+	public void updateListing(){
+		String currentTimesString;
+		currentTimesString = "FILLER";
+		ttable = new Timetable(this.getApplicationContext(), this.recourceID);
+		currentTimesString = ttable.grabToday();
+		Log.d("after", "T.grabToday()");
+		tvCurrent.setText(currentTimesString);
+		Log.d("done", "updateListing()");
 	}
 	
 	/**
 	 * Check for timetable file and if not exists place default on sdcard
+	 *   ! currently unused
 	 */
+	@SuppressWarnings("unused")
 	private void testFileExists() {
 		File testFile = new java.io.File(Environment.getExternalStorageDirectory().getPath()+"/data" , "timetable.txt");
 		if (!(testFile.exists())){
@@ -51,6 +84,7 @@ public class Main extends Activity{
 	
 	/**
 	 * Will copy the default timetable to the sdcard
+	 *   ! currently unused
 	 */
 	private void copyFile() {
 		// create directory on sdcard
@@ -90,7 +124,7 @@ public class Main extends Activity{
 			e.printStackTrace();
 		}
 		
-	}
+	} //end copyFile
 
 
 	
