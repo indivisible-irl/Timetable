@@ -9,7 +9,7 @@ http://www.reddit.com/r/androidapps/comments/z0c12/looking_for_some_app_advice
 
 
 
-TODO / Bugs:
+TODO / Bugs: (x-old/ignore, y-done, o-todo)
 	x Stop disp of layout/background.
 	x No times added to toast string.
 			- poss the time it is? should pick up last time regardless though
@@ -22,4 +22,4 @@ TODO / Bugs:
 	
 	
 	y Move String to int[] to the read stage and pass the int[]s around instead.
-	- Forget copy for the moment and use the resource. File or reader param?
+	o Forget copy for the moment and use the resource. File or reader param?

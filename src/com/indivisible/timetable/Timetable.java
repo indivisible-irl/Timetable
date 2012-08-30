@@ -2,7 +2,7 @@ package com.indivisible.timetable;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
@@ -10,8 +10,6 @@ import android.content.Context;
 import android.util.Log;
 
 public class Timetable {
-
-	boolean debug = true;				// just used to print debug info
 	
 	List<int[]> times;
 	
@@ -51,7 +49,7 @@ public class Timetable {
 		
 		try {
 			while((line = br.readLine()) != null){
-				Log.i("line", line);
+				//Log.i("line", line);
 				if (line.startsWith("#")){
 					continue;
 				} else if (line.trim().length() == 0){
@@ -60,10 +58,13 @@ public class Timetable {
 					timetableLines.add(line.trim());
 				}
 			}
+			iStream.close();
+			br.close();
 		} catch (IOException e) {
 			// Can't read file
 			e.printStackTrace();
 		}
+		
 		Log.d("done", "parseFile()");
 		return timetableLines;
 	}
@@ -110,11 +111,6 @@ public class Timetable {
 		times[3] = Integer.parseInt(arrives[0]);
 		times[4] = Integer.parseInt(arrives[1]);
 		
-		if (debug){
-			// print to catlog
-			Log.d("getTimes", times[0]+","+times[1]+":"+times[2]+"-"+times[3]+":"+times[4]);
-		}
-		
 		return times;
 	}
 	
@@ -122,15 +118,16 @@ public class Timetable {
 	 * Work out today's times and return a formatted string for display
 	 * @return String todayTimes
 	 */
-	public String grabToday(){
+	public String grabDay(int dayInt){
 		List<int[]> todayTimes;
 		String todayTimesString;
 		
-		todayTimes = getToday(this.times);
+		// separate today's time out and format as a string to display
+		todayTimes = getDay(dayInt, this.times);
 		todayTimesString = generateText(todayTimes);
 		
-		Log.d("done", "grabToday()");
-		Log.i("is:", todayTimesString);
+		//Log.d("done", "grabToday()");
+		//Log.i("today:", todayTimesString);
 		return todayTimesString;
 	}
 	
@@ -138,18 +135,15 @@ public class Timetable {
 	 * Extract all of today's times from full listing and return them
 	 * @return int[x][5] todayTimes
 	 */
-	private List<int[]> getToday(List<int[]> allTimes){
+	private List<int[]> getDay(int dayInt, List<int[]> allTimes){
 		List<int[]> todayTimes = new ArrayList<int[]>();
 		
 		// get the current day and time
-		// TODO add time of day handling
-		Calendar.getInstance();
-		int nowDay = Calendar.DAY_OF_WEEK;
-		//int nowHour = Calendar.HOUR_OF_DAY;
-		//int nowMin = Calendar.MINUTE;
+		// TODO add time of day handling for later highlighting (or handle in string creation?)
+		Log.i("Today:", String.valueOf(dayInt));
 		
 		for (int[] time : allTimes){
-			if(time[0] == nowDay){
+			if(time[0] == dayInt){
 				todayTimes.add(time);
 			}
 		}
@@ -162,11 +156,12 @@ public class Timetable {
 	 * @return String textTimes
 	 */
 	public String generateText(List<int[]> times){
-		String textTimes = "Depart | Arrive";
+		// TODO use html formatting to highlight old, current, future times
+		String textTimes = "Depart | Arrive\n-------|-------";
 		for (int[] time : times){
 			textTimes +=
-				"\n "+ time[1] +":"+ time[2] +
-				" |  "+ time[3] +":"+ time[4];
+				"\n"+ String.format("%02d", time[1]) +":"+ String.format("%02d", time[2]) +
+				"  |  "+ String.format("%02d", time[3]) +":"+ String.format("%02d", time[4]);
 		}
 		return textTimes;
 	}

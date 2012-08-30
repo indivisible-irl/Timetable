@@ -2,5 +2,7 @@
     <string name="app_name">Timetable</string>
     
     <string name="b_close">Close</string>
-    <string name="tv_placeholder">Calculating timetable...</string>
+    
+    <string name="tv_placeholder">Calculating timetable</string>
+    <string name="tv_day">Displaying times for: Please wait</string>
 </resources>
