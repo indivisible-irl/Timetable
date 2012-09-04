@@ -40,7 +40,7 @@ public class Timetable {
 	 * @param File
 	 */
 	private List<String> parseFile(Context c, int rID){
-		// stick with File input or reader object better?
+		// opena nd read resource
 		List<String> timetableLines = new ArrayList<String>();
 		String line = null;
 		
