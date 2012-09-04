@@ -8,6 +8,7 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class Main extends Activity implements View.OnClickListener{
 		currentTimesString = ttable.grabDay(getToday());
 		//Log.d("after", "T.grabToday()");
 		tvCurrent.setText(currentTimesString);
+		//tvCurrent.setText(Html.fromHtml(currentTimesString));
 		tvDay.setText("Displaying for: " + getDayString(getToday()) +" ");
 		//Log.d("done", "updateListing(moved)");
 	}

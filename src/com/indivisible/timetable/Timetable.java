@@ -2,7 +2,7 @@ package com.indivisible.timetable;
 
 import java.io.*;
 import java.util.ArrayList;
-//import java.util.Calendar;
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
@@ -92,24 +92,29 @@ public class Timetable {
 	/**
 	 * Extract the departure and arrival times (as ints) from single lines.
 	 * @param line
-	 * @return int[4]
+	 * @return int[7]
 	 */
 	private int[] getTimesFromLine(String line){
 		// TODO should prob make a more elegant regex split
 		
-		int[] times = new int[5];
+		// {day, departHour, departMin, arriveHour, arriveMin, departInMins, arriveInMins}
+		int[] times = new int[7];
 		
-		// split up the line into its pieces
+		// split up the line into chunks
 		String[] lineParts = line.split(",");
 		String[] departs = lineParts[1].split(":");
 		String[] arrives = lineParts[2].split(":");
 		
-		// fill the int array with {day, departHour, departMin, arriveHour, arriveMin}
+		// fill the int array with {day, departHour, departMin, arriveHour, arriveMin, arriveInMins, departInMins}
 		times[0] = Integer.parseInt(lineParts[0]);
 		times[1] = Integer.parseInt(departs[0]);
 		times[2] = Integer.parseInt(departs[1]);
 		times[3] = Integer.parseInt(arrives[0]);
 		times[4] = Integer.parseInt(arrives[1]);
+		
+		// work out the minute equivalents for easy comparison
+		times[5] = times[1] * 60 + times[2];
+		times[6] = times[3] * 60 + times[4];
 		
 		return times;
 	}
@@ -124,7 +129,8 @@ public class Timetable {
 		
 		// separate today's time out and format as a string to display
 		todayTimes = getDay(dayInt, this.times);
-		todayTimesString = generateText(todayTimes);
+		//todayTimesString = generateText(todayTimes);
+		todayTimesString = generateFormattedText(todayTimes);
 		
 		//Log.d("done", "grabToday()");
 		//Log.i("today:", todayTimesString);
@@ -139,7 +145,6 @@ public class Timetable {
 		List<int[]> todayTimes = new ArrayList<int[]>();
 		
 		// get the current day and time
-		// TODO add time of day handling for later highlighting (or handle in string creation?)
 		Log.i("Today:", String.valueOf(dayInt));
 		
 		for (int[] time : allTimes){
@@ -156,14 +161,62 @@ public class Timetable {
 	 * @return String textTimes
 	 */
 	public String generateText(List<int[]> times){
-		// TODO use html formatting to highlight old, current, future times
+		//TODO if extending for other than today display we should use this method.
 		String textTimes = "Depart | Arrive\n-------|-------";
 		for (int[] time : times){
-			textTimes +=
-				"\n"+ String.format("%02d", time[1]) +":"+ String.format("%02d", time[2]) +
-				"  |  "+ String.format("%02d", time[3]) +":"+ String.format("%02d", time[4]);
+			textTimes += toPrintableTime(time);
 		}
 		return textTimes;
+	}
+	/**
+	 * Convert an array of times into a formatted String for display
+	 * Uses HTML tags
+	 * @param List<int[]> times
+	 * @return String
+	 */
+	public String generateFormattedText(List<int[]> times){
+		int pastVarience = -60;		// (now - then) give increasingly neg nums as we go back
+		int futureVarience = 100;	// 
+		
+		String header = "Depart | Arrive\n-------|-------";
+		String past="none", present="none", future="none", formattedTextTimes="no text";
+		int departMins, arriveMins;
+		
+		Calendar cal = Calendar.getInstance();
+		int nowMins = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+		
+		for(int[] time : times){
+			departMins = time[5];
+			arriveMins = time[6];
+			
+			past = "";
+			present = "";
+			future = "";
+			
+			if (nowMins-departMins < pastVarience || nowMins-arriveMins < pastVarience){
+				past += toPrintableTime(time);
+			} else if (nowMins-departMins > futureVarience || nowMins-arriveMins > futureVarience){
+				future += toPrintableTime(time);
+			} else {
+				present += toPrintableTime(time);
+			}
+		} //end for loop
+		
+		formattedTextTimes = header + "<br />" +
+				"<font color='#333333'>" + past + "</font>" +
+				"<font color='#333333'>" + present + "</font>" +
+				"<font color='#333333'>" + future + "</font>";
+		return formattedTextTimes;
+	}
+	
+	/**
+	 * Convert a int[] into a printable line of text
+	 * @param int[] time
+	 * @return
+	 */
+	public String toPrintableTime(int[] time){
+		return "\n"+ String.format("%02d", time[1]) +":"+ String.format("%02d", time[2]) +
+				"  |  "+ String.format("%02d", time[3]) +":"+ String.format("%02d", time[4]) + "<br />";
 	}
 	
 //	/**
