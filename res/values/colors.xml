@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="past">#333333</color>
+    <color name="current">#FF0000</color>
+    <color name="future">#009900</color>
+</resources>

@@ -5,4 +5,9 @@
     
     <string name="tv_placeholder">Calculating timetable</string>
     <string name="tv_day">Displaying times for: Please wait</string>
+    
+    <string name="tv_header">-- Header --</string>
+    <string name="tv_past">Past times</string>
+    <string name="tv_current">Current times</string>
+    <string name="tv_future">Future times</string>
 </resources>

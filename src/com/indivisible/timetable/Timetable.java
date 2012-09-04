@@ -123,18 +123,21 @@ public class Timetable {
 	 * Work out today's times and return a formatted string for display
 	 * @return String todayTimes
 	 */
-	public String grabDay(int dayInt){
+	public String[] grabDay(int dayInt){
+		// ! changed from String to String[] to allow for multiple TextViews
 		List<int[]> todayTimes;
-		String todayTimesString;
+		//String todayTimesString;
+		String[] todayTimesStrings;
 		
-		// separate today's time out and format as a string to display
+		// separate today's time out and format as string(s) to display
 		todayTimes = getDay(dayInt, this.times);
 		//todayTimesString = generateText(todayTimes);
-		todayTimesString = generateFormattedText(todayTimes);
+		//todayTimesString = generateFormattedText(todayTimes);
+		todayTimesStrings = generateFormattedStrings(todayTimes);
 		
 		//Log.d("done", "grabToday()");
 		//Log.i("today:", todayTimesString);
-		return todayTimesString;
+		return todayTimesStrings;
 	}
 	
 	/**
@@ -169,7 +172,7 @@ public class Timetable {
 		return textTimes;
 	}
 	/**
-	 * Convert an array of times into a formatted String for display
+	 * Convert an array of times into a single (poorly formatted HTML) String for display
 	 * Uses HTML tags
 	 * @param List<int[]> times
 	 * @return String
@@ -208,6 +211,48 @@ public class Timetable {
 				"<font color='#333333'>" + future + "</font>";
 		return formattedTextTimes;
 	}
+	/**
+	 * Return an array of strings for use in the multiple TextView layout
+	 * @param times
+	 * @return
+	 */
+	public String[] generateFormattedStrings(List<int[]> times){
+		int pastVarience = -60;		// (now - then) give increasingly neg nums as we go back
+		int futureVarience = 100;	// 
+		
+		String[] timeStrings = new String[4];
+		timeStrings[0] = "Depart | Arrive\n-------|-------";	// header
+		
+		String past="none", present="none", future="none";
+		int departMins, arriveMins;
+		
+		Calendar cal = Calendar.getInstance();
+		int nowMins = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+		
+		// loop through trip times and divide into past, present and future strings
+		for(int[] time : times){
+			departMins = time[5];
+			arriveMins = time[6];
+			
+			past = "";
+			present = "";
+			future = "";
+			
+			if (nowMins-departMins < pastVarience || nowMins-arriveMins < pastVarience){
+				past += toPrintableTime(time);
+			} else if (nowMins-departMins > futureVarience || nowMins-arriveMins > futureVarience){
+				future += toPrintableTime(time);
+			} else {
+				present += toPrintableTime(time);
+			}
+		} //end for loop
+		
+		timeStrings[1] = past;
+		timeStrings[2] = present;
+		timeStrings[3] = future;
+		
+		return timeStrings;
+	}
 	
 	/**
 	 * Convert a int[] into a printable line of text
@@ -216,7 +261,7 @@ public class Timetable {
 	 */
 	public String toPrintableTime(int[] time){
 		return "\n"+ String.format("%02d", time[1]) +":"+ String.format("%02d", time[2]) +
-				"  |  "+ String.format("%02d", time[3]) +":"+ String.format("%02d", time[4]) + "<br />";
+				"  |  "+ String.format("%02d", time[3]) +":"+ String.format("%02d", time[4]);
 	}
 	
 //	/**
