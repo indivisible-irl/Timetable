@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 public class Main2 extends Activity implements View.OnClickListener{
 
-	Timetable ttable;
+	Timetable_old ttable;
 	int recourceID = R.raw.timetable;	// hard coded for the moment, will use external eventually
 	
 	Button bClose;
@@ -46,7 +46,7 @@ public class Main2 extends Activity implements View.OnClickListener{
 		Log.d("done", "init layout views");
 		
 		// Set timetable and get today's info (with 'when' calculated
-		ttable = new Timetable(this.getApplicationContext(), this.recourceID);
+		ttable = new Timetable_old(this.getApplicationContext(), this.recourceID);
 		String[] timeStrings = ttable.grabDay(getToday());
 		
 		// update the textview with today's info
