@@ -13,13 +13,12 @@ import android.util.Log;
 
 public class EventCreator {
 
+	/////////////////////////////////////////////////////////////
 	//// vars
 	private List<Event> events;
 	
+	/////////////////////////////////////////////////////////////
 	//// constructors
-	protected EventCreator(String fileLoc){
-		//TODO Take a file location as input and pass InputStream onwards
-	}
 	/**
 	 * Create an array of Events using an internal resource ID
 	 * @param context
@@ -29,11 +28,37 @@ public class EventCreator {
 		InputStream iStream = c.getResources().openRawResource(resID);
 		createEvents(iStream);
 	}
+	/**
+	 * Create an array of Events using a file location
+	 * @param fileLoc String
+	 */
+	protected EventCreator(String fileLoc){
+		//TODO Take a file location as input and pass InputStream onwards
+	}
+	/**
+	 * Create an array of Events using a File object
+	 * @param file File
+	 */
 	protected EventCreator(File file){
 		//TODO Take a File object as input and pass InputStream onwards
 	}
 	
+	/////////////////////////////////////////////////////////////
+	//// getters & setters
+	/**
+	 * @return List<Event> Events from a file.
+	 */
+	public List<Event> getEvents(){
+		return this.events;
+	}
+	/**
+	 * @param events the events to set
+	 */
+	public void setEvents(List<Event> events){
+		this.events = events;
+	}
 	
+	/////////////////////////////////////////////////////////////
 	//// functional methods
 	/**
 	 * Taking an InputStream this method will cause the List<Event> array to be populated
@@ -113,11 +138,5 @@ public class EventCreator {
 		times[3] = Integer.parseInt(arrives[0]) * 60 + Integer.parseInt(arrives[1]);
 		
 		return times;
-	}
-	/**
-	 * @return List<Event> Events from a file.
-	 */
-	public List<Event> getEvents(){
-		return this.events;
 	}
 }

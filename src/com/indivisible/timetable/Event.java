@@ -4,39 +4,41 @@ import java.io.Serializable;
 
 public class Event implements Serializable{
 
+	/////////////////////////////////////////////////////////////
 	//// vars
 	private static final long serialVersionUID = 1L;
 	private int day, minsStart, minsEnd;
 	//private String title;
 	//private boolean active;
 	
+	/////////////////////////////////////////////////////////////
 	//// constructors
 	protected Event(){
-		this.day = 0;
-		this.minsStart = 0;
-		this.minsEnd = 0;
+		this.setDay(0);
+		this.setMinsStart(0);
+		this.setMinsEnd(0);
 	}
 	protected Event(int solo){
-		this.day = 0;
-		this.minsStart = solo;
+		this.setDay(0);
+		this.setMinsStart(solo);
 	}
 	protected Event(int start, int end){
-		this.day = 0;
+		this.setDay(0);
 		this.setMinsStart(start);
 		this.setMinsEnd(end);
 	}
 	protected Event(int day, int start, int end){
-		this.day = day;
+		this.setDay(day);
 		this.setMinsStart(start);
 		this.setMinsEnd(end);
 	}
 	protected Event(int[] multiInfo){
 		//TODO test for int[] length?
-		this.day = multiInfo[0];
+		this.setDay(multiInfo[0]);
 		this.setMinsStart(multiInfo[1]);
 		this.setMinsEnd(multiInfo[2]);
 	}
-	
+	/////////////////////////////////////////////////////////////
 	//// getters & setters
 	/**
 	 * @return the timeMinsStart
@@ -63,6 +65,19 @@ public class Event implements Serializable{
 		this.minsEnd = timeMinsEnd;
 	}
 	
+	/**
+	 * @return the day
+	 */
+	public int getDay() {
+		return day;
+	}
+	/**
+	 * @param day the day to set
+	 */
+	public void setDay(int day) {
+		this.day = day;
+	}
+	/////////////////////////////////////////////////////////////
 	//// functional methods
 	/**
 	 * Get the Event's start time in hours and minutes
