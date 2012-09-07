@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 public class Main2 extends Activity implements View.OnClickListener{
 
-	Timetable_old ttable;
+	Timetable ttable;
 	int recourceID = R.raw.timetable;	// hard coded for the moment, will use external eventually
 	
 	Button bClose;
@@ -29,7 +29,7 @@ public class Main2 extends Activity implements View.OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		// run when our app first loads (may have been auto killed prev)
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_disp_2);
+		setContentView(R.layout.main_disp);
 		
 		// test for timetable.txt on sdcard, create if not there
 		//    disabled for the moment, will extend later
@@ -37,23 +37,19 @@ public class Main2 extends Activity implements View.OnClickListener{
 		
 		// initalise layout views
 		Button bClose = (Button) this.findViewById(R.id.b_close);
-		TextView tvHeader = (TextView) this.findViewById(R.id.tv_header);
-		TextView tvPast = (TextView) this.findViewById(R.id.tv_past);
-		TextView tvCurrent = (TextView) this.findViewById(R.id.tv_current);
-		TextView tvFuture = (TextView) this.findViewById(R.id.tv_future);
+		TextView tvTimetable = (TextView) this.findViewById(R.id.tv_timetable);
 		TextView tvDay = (TextView) this.findViewById(R.id.tv_day);
 		bClose.setOnClickListener(this);
 		Log.d("done", "init layout views");
 		
-		// Set timetable and get today's info (with 'when' calculated
-		ttable = new Timetable_old(this.getApplicationContext(), this.recourceID);
-		String[] timeStrings = ttable.grabDay(getToday());
+		// Set timetable and get today's info (with 'when' calculated and colored)
+		ttable = new Timetable(this.getApplicationContext(), this.recourceID);
+		EventGroups eventGroups = ttable.divideEventsByTime(ttable.getTodaysEvents(), true);
+		//TODO move EventGroups into Timetable
+		String timeString = eventGroups.makeColoredString();
 		
 		// update the textview with today's info
-		tvHeader.setText(timeStrings[0]);
-		tvPast.setText(timeStrings[1]);
-		tvCurrent.setText(timeStrings[2]);
-		tvFuture.setText(timeStrings[3]);
+		tvTimetable.setText(timeString);
 		tvDay.setText("Displaying for: " + getDayString(getToday()));
 		
 		// older single TextView method:
@@ -90,6 +86,7 @@ public class Main2 extends Activity implements View.OnClickListener{
 	 * @return int dayInt
 	 */
 	public int getToday(){
+		//TODO probably delete this?
 		Calendar cal = Calendar.getInstance();
 		int today = cal.get(Calendar.DAY_OF_WEEK);
 		Log.i("getToday():", ""+today);

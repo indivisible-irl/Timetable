@@ -20,7 +20,7 @@ public class EventCreator {
 	/////////////////////////////////////////////////////////////
 	//// constructors
 	/**
-	 * Create an array of Events using an internal resource ID
+	 * Create an array of Events using an internal resource ID. (Only active constructor ATM)
 	 * @param context
 	 * @param resID int
 	 */
@@ -29,7 +29,7 @@ public class EventCreator {
 		createEvents(iStream);
 	}
 	/**
-	 * Create an array of Events using a file location
+	 * Create an array of Events using a file location.
 	 * @param fileLoc String
 	 */
 	protected EventCreator(String fileLoc){

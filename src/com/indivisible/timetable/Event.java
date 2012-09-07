@@ -14,13 +14,14 @@ public class Event implements Serializable{
 	/////////////////////////////////////////////////////////////
 	//// constructors
 	protected Event(){
-		this.setDay(0);
-		this.setMinsStart(0);
-		this.setMinsEnd(0);
+		this.setDay(-1);
+		this.setMinsStart(-1);
+		this.setMinsEnd(-1);
 	}
 	protected Event(int solo){
 		this.setDay(0);
 		this.setMinsStart(solo);
+		this.setMinsEnd(-1);
 	}
 	protected Event(int start, int end){
 		this.setDay(0);
@@ -110,5 +111,14 @@ public class Event implements Serializable{
 		hourMins[2] = getMinsEnd() / 60;
 		hourMins[3] = getMinsEnd() % 60;
 		return hourMins;
+	}
+	
+	public String getFormatedString(){
+		//TODO copy old string format (github)
+		int[] start = getHourMinsStart();
+		int[] end = getHourMinsEnd();
+		return 	String.format("%02d", start[0]) +":"+ String.format("%02d", start[1])
+				+"  |  "+
+				String.format("%02d", end[0]) +":"+ String.format("%02d", end[1]);
 	}
 }
